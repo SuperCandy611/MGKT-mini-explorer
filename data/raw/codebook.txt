@@ -1,3 +1,4 @@
+這是一個multifactor general knowledge test的結果資料集。
 This data was collected through an on-line general knowledge test. Data collection took place 2017-2018. Users were motivated to take the test to obtain personalized results.
 
 This test used a unique question format, where each question was of a type that could have multiple correct answers. In each question, 10 answers were displayed to the respondent and they were told that 5 were correct and to select as many as they knew but not to guess.
