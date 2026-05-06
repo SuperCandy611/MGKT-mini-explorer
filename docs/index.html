@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGKT Mini Explorer</title>
+  <style>
+    /* ── Tokens ── */
+    :root {
+      --blue:   #2B5F8E;
+      --red:    #E05C5C;
+      --bg:     #F7F9FC;
+      --card:   #FFFFFF;
+      --text:   #1D2D44;
+      --muted:  #5a6a7e;
+      --border: #dce4ed;
+      --radius: 10px;
+    }
+
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Hero ── */
+    header {
+      background: var(--blue);
+      color: #fff;
+      padding: 64px 24px 48px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    header .tagline {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      opacity: 0.88;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Sections ── */
+    main { padding: 48px 0 64px; }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 28px;
+    }
+    section h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--blue);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--blue);
+      display: inline-block;
+    }
+    section p { color: var(--text); }
+    section p + p { margin-top: 10px; }
+
+    ol, ul { padding-left: 1.4em; }
+    li { margin-bottom: 6px; }
+
+    /* ── Figures ── */
+    .figure-block { margin-top: 28px; }
+    .figure-block + .figure-block { margin-top: 36px; }
+
+    .figure-block img {
+      width: 100%;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .figure-block figcaption {
+      margin-top: 10px;
+      font-size: 0.93rem;
+      color: var(--muted);
+    }
+    .figure-block figcaption strong {
+      color: var(--text);
+    }
+
+    /* ── Caveats ── */
+    .caveat-list li::marker { color: var(--red); }
+
+    /* ── Accent label ── */
+    .label {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── Repo link ── */
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff !important;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.97rem;
+      margin-top: 8px;
+    }
+    .repo-link:hover { opacity: 0.88; text-decoration: none; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ① Title + Tagline -->
+<header>
+  <div class="wrap">
+    <h1>MGKT Mini Explorer</h1>
+    <p class="tagline">Who knows what — and does it vary by gender or age?<br>
+    A reproducible exploratory analysis of the Multi-Factor General Knowledge Test dataset (n ≈ 19 k).</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- ② Goal -->
+    <section>
+      <h2>Goal</h2>
+      <p>
+        The MGKT covers 32 heterogeneous knowledge domains — from geography and science to pop culture.
+        Using this publicly available dataset, I wanted to answer two questions:
+        <strong>What does the overall knowledge-score distribution look like across respondents?</strong>
+        And <strong>does total score differ systematically by gender</strong>, or is within-group variation large enough to dwarf any group difference?
+      </p>
+    </section>
+
+    <!-- ③ Procedure -->
+    <section>
+      <h2>Procedure</h2>
+      <ol>
+        <li><strong>Data source:</strong> Downloaded the raw CSV from the Open-Source Psychometrics Project (<em>MGKT_data.zip</em>), which contains 19,218 complete test sessions collected online in 2017–2018.</li>
+        <li><strong>Cleaning:</strong> Retained only rows where age is between 13 and 80 (removing implausible entries) and where gender was explicitly stated (dropping the 0 = "unstated" category). This left 19,107 rows (0.6% attrition).</li>
+        <li><strong>Score construction:</strong> Each of the 32 questions records a score (correct answers selected minus incorrect answers selected, column <code>QXS</code>). These were summed across all questions to form a single total-knowledge score per respondent.</li>
+        <li><strong>Figure 1 — Descriptive:</strong> A histogram of the total-score distribution with 40 bins, with the group median marked, to characterise the shape and central tendency of knowledge scores.</li>
+        <li><strong>Figure 2 — Relational:</strong> Side-by-side box plots of total score split by gender (Male / Female / Other), annotated with group n and median, to assess whether score level differs across groups.</li>
+        <li><strong>Reproducibility:</strong> All steps are encapsulated in <code>src/load_data.py</code> and <code>notebooks/01_explore.ipynb</code>; anyone with the raw CSV can re-run the full pipeline with a single <code>jupyter notebook</code> command.</li>
+      </ol>
+    </section>
+
+    <!-- ④ Outcome -->
+    <section>
+      <h2>Outcome</h2>
+
+      <div class="figure-block">
+        <figure>
+          <img src="fig1_score_distribution.png" alt="Histogram of total knowledge score" />
+          <figcaption>
+            <strong>Figure 1 — Score Distribution.</strong>
+            Total scores follow a roughly bell-shaped distribution centred near the median of 57, with a slight right skew — most respondents score in a moderate range, and very high scorers are rare.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="figure-block">
+        <figure>
+          <img src="fig2_score_by_gender.png" alt="Box plot of total score by gender" />
+          <figcaption>
+            <strong>Figure 2 — Score by Gender.</strong>
+            Males score slightly higher at the median than Females or Other, but the interquartile ranges overlap substantially across all three groups — suggesting that <em>individual variation dwarfs any gender-level difference</em>.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ⑤ Caveats -->
+    <section>
+      <h2>Caveats</h2>
+      <ul class="caveat-list">
+        <li><strong>Volunteer sampling bias:</strong> Participants self-selected into an online test, likely over-representing people who are curious, English-literate, and digitally active. Results should not be generalised to any national or global population.</li>
+        <li><strong>Self-report limitation:</strong> The platform asked respondents "Did you try your best?" and stored only affirmative answers, but effort and motivation still vary in ways the data cannot capture.</li>
+        <li><strong>Gender as a binary-plus-other category:</strong> The three-option gender variable cannot represent the full spectrum of gender identities; the "Other" group is also small (n ≈ 300), limiting statistical interpretation.</li>
+        <li><strong>Causal inference is not possible:</strong> Observed group differences in score are descriptive only — they cannot be attributed to gender per se without controlling for confounders such as education, age, or country of origin.</li>
+      </ul>
+    </section>
+
+    <!-- ⑥ Repo link -->
+    <section>
+      <h2>Repository</h2>
+      <p>Full code, notebooks, and figures are available on GitHub.</p>
+      <a class="repo-link" href="https://github.com/SuperCandy611/MGKT-mini-explorer" target="_blank">
+        ↗ SuperCandy611 / MGKT-mini-explorer
+      </a>
+    </section>
+
+    <!-- ⑦ Author + Date -->
+    <section>
+      <h2>Author</h2>
+      <p>
+        <strong>Candy Wu</strong> &nbsp;·&nbsp; Student ID: 113892001<br>
+        NCU 認知神經科學研究所 博士二年級<br>
+        <span style="color:var(--muted); font-size:0.93rem;">
+          Code developed with assistance from <a href="https://claude.ai" target="_blank">Claude</a> (Anthropic) &nbsp;·&nbsp; May 2026
+        </span>
+      </p>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  Data: <a href="https://openpsychometrics.org/_rawdata/MGKT_data.zip" target="_blank">Open-Source Psychometrics Project</a>
+  &nbsp;·&nbsp; Built with pandas + matplotlib &nbsp;·&nbsp; Hosted on GitHub Pages
+</footer>
+
+</body>
+</html>
